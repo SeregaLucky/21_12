@@ -10,7 +10,7 @@ export const objNews = {
 
     return fetch(baseURL + mainUrl + apiKey)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         // if (res.articles.length === 0) return;
         // if (res.status >= 400) {};
 

@@ -1,13 +1,16 @@
 import { objNews } from './newApi';
-import { templateItemNew } from './templateItem';
+import { templateItemNew } from './templates/templateItem';
 
-import templateItemHbs from './templateItem.hbs';
-import templateList from './templateList.hbs';
+import templateItemHbs from './templates/templateItem.hbs';
+import templateList from './templates/templateList.hbs';
 
-const refs = {
+import { findNeedImgs } from './lazyLoad';
+
+export const refs = {
   list: document.querySelector('.js_list'),
   form: document.querySelector('.js_form'),
   buttonMore: document.querySelector('.js_button_more'),
+  divForAddMore: document.querySelector('.js_div_for_add_mode'),
 };
 
 refs.form.addEventListener('submit', handleSubmitNews);
@@ -41,13 +44,15 @@ function handleClickMoreNews() {
   makeFetch();
 }
 
-function makeFetch() {
+export function makeFetch() {
   objNews
     .makeFetchNews()
     .then(data => {
       console.log(data);
       const allLi = markup(data.articles);
       refs.list.insertAdjacentHTML('beforeend', allLi);
+
+      findNeedImgs();
 
       // Кнопка появляется лишь тогда когда пришел первый запрос
       if (objNews.page > 1) {
@@ -65,3 +70,20 @@ function markup(dataList) {
   // return dataList.map(item => templateItemHbs(item)).join('');
   return templateList(dataList);
 }
+
+// const fnEntries = entries => {
+//   console.log(entries);
+
+//   entries.forEach(entry => {
+//     if (entry.isIntersecting) {
+//       makeFetch();
+//     }
+//   });
+// };
+
+// const options = {
+//   rootMargin: '200px',
+// };
+
+// const intObs = new IntersectionObserver(fnEntries, options);
+// intObs.observe(refs.divForAddMore);
